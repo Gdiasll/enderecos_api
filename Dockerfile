@@ -1,12 +1,7 @@
-FROM node:erbium-alpine as base
+FROM node:12.14.0-alpine3.11
 
-COPY --chown=node:node ./package.json ./yarn.lock /var/www/
-RUN chmod -R 0744 /var/www
+RUN apk add --no-cache bash
 
-WORKDIR /var/www
-RUN yarn install
+USER node
 
-COPY . /var/www
-EXPOSE 3000
-RUN yarn run build
-CMD [ "sh", "/var/www/entrypoint.sh" ]
+WORKDIR /home/node/app

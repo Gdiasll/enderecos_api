@@ -1,10 +1,20 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
+import validationExceptionFactory from './utils/validation/validation-exception.factory';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: validationExceptionFactory,
+      transform: true,
+      whitelist: true,
+    })
+  )
 
   const config = new DocumentBuilder()
   .setTitle('Enderecos API')

@@ -17,7 +17,7 @@ export class EnderecoController {
     @ApiResponse({ status: 500, description: 'Erro Interno do Servidor (Internal Server Error) - Erro interno do servidor' })
     @ApiOperation({ description: 'Serviço responsável por retornar distância em kilômetros(KM) entre endereços.' })
     @Post('distancia-euclidiana')
-    @ApiBody({ type: DistanciaEuclidianaDto, schema: { minItems: 2 } })
+    @ApiBody({ type: DistanciaEuclidianaDto })
     @HttpCode(200)
     public async distancia_euclidiana(@Body() distanciaEuclidianaDto: DistanciaEuclidianaDto): Promise<RespostaDistanciaEuclidianaDto> {
         return this.enderecoService.retornaDistanciaEuclidiana(distanciaEuclidianaDto);

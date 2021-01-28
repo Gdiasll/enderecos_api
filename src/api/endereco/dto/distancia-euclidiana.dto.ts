@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDefined, IsString, MinLength, minLength } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDefined, IsString, MinLength } from 'class-validator';
 
 export class DistanciaEuclidianaDto {
     
@@ -10,7 +10,6 @@ export class DistanciaEuclidianaDto {
     @ArrayMinSize(2, { message: 'Campo (enderecos) precisa ter pelo menos 2 itens.' })
     @ArrayMaxSize(50, { message: 'Quantidade de endereços ultrapassou o limite permitido.' })
     @ApiProperty({
-        isArray: true,
         type: [String],
     })
     enderecos: string[];

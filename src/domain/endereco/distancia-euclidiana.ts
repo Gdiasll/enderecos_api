@@ -1,24 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { CalculaDistanciaEuclidianaDto, CoordenadasDto } from "./dto/calcula-distancia-euclidiana.dto";
 import { RetornaDistanciaEuclidianaDto } from "./dto/retorna-distancia-euclidiana.dto";
-import { IDistanciaEuclidiana } from "./interface/IDistanciaEuclidiana";
+import { IDistanciaEuclidiana } from "./interface/Idistancia-euclidiana";
 
 @Injectable()
 export class DistanciaEuclidiana implements IDistanciaEuclidiana {
-    constructor() {}
-
     /**
      * calculaDistanciaCoordenadas
+     * Retorna um array contendo as distâncias entre pares de coordenadas, ordenados por distancia
      */
     public calculaDistanciaCoordenadas(coordenadas: CalculaDistanciaEuclidianaDto[]): RetornaDistanciaEuclidianaDto[] {
 
-        let distanciasEuclidianas: RetornaDistanciaEuclidianaDto[] = [];
-        let indexAuxiliar: number = 0;
+        const distanciasEuclidianas: RetornaDistanciaEuclidianaDto[] = [];
+        let indexAuxiliar = 0;
 
-        for ( let coordenadaA of coordenadas ) {
+        for ( const coordenadaA of coordenadas ) {
 
             for (let i = indexAuxiliar + 1; i < coordenadas.length; i++) {
-                let coordenadaB: CalculaDistanciaEuclidianaDto = coordenadas[i];
+                const coordenadaB: CalculaDistanciaEuclidianaDto = coordenadas[i];
 
                 distanciasEuclidianas.push({
                     enderecoPontoA: coordenadaA.endereco,
@@ -28,13 +27,12 @@ export class DistanciaEuclidiana implements IDistanciaEuclidiana {
             }
             ++indexAuxiliar
         }
-        return distanciasEuclidianas;
+        return this.ordenaArrayDistancias(distanciasEuclidianas);
     }
 
     private obtemDistanciaEntreDoisPontos(coordenadaA: CoordenadasDto, coordenadaB: CoordenadasDto): number {
 
         if ((coordenadaA.lat === coordenadaB.lat) && (coordenadaA.lng === coordenadaB.lng)) {
-            console.log('aqui')
             return 0;
         }
         const radlat1 = Math.PI * coordenadaA.lat/180;
@@ -48,5 +46,9 @@ export class DistanciaEuclidiana implements IDistanciaEuclidiana {
         dist = dist * 60 * 1.1515;
         dist = dist * 1.609344
         return dist;
+    }
+
+    private ordenaArrayDistancias(lista: RetornaDistanciaEuclidianaDto[]): RetornaDistanciaEuclidianaDto[] {
+        return lista.sort((a,b) => a.distanciaEuclidiana - b.distanciaEuclidiana);
     }
 }

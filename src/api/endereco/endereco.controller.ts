@@ -1,6 +1,7 @@
-import { Body, Controller, NotFoundException, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { DistanciaEuclidianaDto } from './dto/distanciaEuclidiana.dto';
+import { DistanciaEuclidianaDto } from './dto/distancia-euclidiana.dto';
+import { RespostaDistanciaEuclidianaDto } from './dto/resposta-distancia-euclidiana.dto';
 import { EnderecoService } from './endereco.service';
 
 @Controller('endereco')
@@ -14,17 +15,12 @@ export class EnderecoController {
     @ApiResponse({ status: 400, description: 'Requisição Inválida (Bad Request) - Erro na sintaxe da requisição' })
     @ApiResponse({ status: 404, description: 'Não Encontrado (Not Found) - O recurso solicitado não foi encontrado' })
     @ApiResponse({ status: 500, description: 'Erro Interno do Servidor (Internal Server Error) - Erro interno do servidor' })
-    @ApiOperation({ description: 'Serviço responsável por realizar cálculo da distancia euclidiana entre endereços.' })
+    @ApiOperation({ description: 'Serviço responsável por retornar distância em kilômetros(KM) entre endereços.' })
     @Post('distancia-euclidiana')
-    @ApiBody({ type: DistanciaEuclidianaDto })
-    public async distancia_euclidiana(@Res() res, @Body() distanciaEuclidianaDto) {
-        try {
-            return res.status(200).json(await this.enderecoService.retornaDistanciaEuclidiana(distanciaEuclidianaDto));
-        } catch (error) {
-            console.log(error) // será implementado sistema de logs
-            if (error instanceof NotFoundException) return res.status(404).json(error.message)
-            res.status(500).json({ mensagem: 'Erro interno do servidor.' })
-        }
+    @ApiBody({ type: DistanciaEuclidianaDto, schema: { minItems: 2 } })
+    @HttpCode(200)
+    public async distancia_euclidiana(@Body() distanciaEuclidianaDto: DistanciaEuclidianaDto): Promise<RespostaDistanciaEuclidianaDto> {
+        return this.enderecoService.retornaDistanciaEuclidiana(distanciaEuclidianaDto);
     }
     
 }
